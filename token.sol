@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24
 
-contract Token {
+contract Token is owned {
     uint public totalSupply;
     string public name;
     string public symbol;
@@ -43,6 +43,24 @@ contract Token {
     function approve(address _spender, uint256 _value) public returns(bool success) {
         allowance[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
+        return true;
     }    
 
+}
+
+contract owned {
+    public address owner;
+
+    constructor {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function transferOwnership(address newOwner) onlyOwner {
+        owner =  newOwner;
+    }
 }
