@@ -10,6 +10,7 @@ contract Token is owned {
 
     event Transfer(address indexed _from,address indexed _to, uint tokens);
     event Approval(address indexed _owner, address indexed _spender, uint tokens);
+    event Burn(address indexed _from, uint256 value);
 
     constructor (string tokenName, string tokenSymbol, uint initialSupply) public {
         totalSupply = initialSupply*10**uint256(decimals);
@@ -45,6 +46,21 @@ contract Token is owned {
         emit Approval(msg.sender, _spender, _value);
         return true;
     }    
+
+    function mintToken (address _target, uint256 _mintedAmount) onlyOwner {
+        balance[_target] += _mintedAmount;
+        totalSupply += _mintedAmount;
+        emit Transfer(0, owner, _mintedAmount);
+        emit Transfer(owner, _target, _mintedAmount);
+    }
+
+    function burn (uint256 _value) onlyOwner returns (bool success) {
+        require(balance[msg.sender]) >= _value;
+        balance[msg.sender] -= _value;
+        totalSupply -= _value;
+        emit Burn(msg.sender, _value);
+        return true;
+    }
 
 }
 
