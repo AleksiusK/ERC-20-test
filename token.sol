@@ -27,4 +27,19 @@ contract Token {
         balance[_to] += value
         emit Transfer(_from, _to, value)
     }
+
+    function transfer (address _to, uint256 _value) public returns(bool success) {
+        _transfer(msg.sender, to, _value),
+        return true;
+    }
+
+    function transferFrom(address _from, address _to, uint256 _value) public returns(bool success) {
+        require(_value <= allowance[_from][msg.sender]);
+        allowance[_from][msg.sender] -= value
+        _transfer(_from, _to, _value);
+        return true;
+    }
+
+    
+
 }
